@@ -1,0 +1,74 @@
+# Single source of truth for every number the Guard agent enforces.
+# Mirrors RULES.md. If a value here disagrees with RULES.md, RULES.md wins
+# and this file must be corrected before the next session.
+
+competition:
+  paper_account: true
+  starting_equity_usd: 100000
+  trading_window_end_sgt: "2026-11-28"
+  submission_deadline_sgt: "2026-11-30T23:59:00+08:00"
+
+universe:
+  allowed_asset_types: [broad_etf, sector_etf, single_stock]  # options: disabled
+  min_price_usd: 1.00
+  min_market_cap_usd: 500000000
+  min_distinct_tickers: 3
+
+limits:
+  max_single_asset_exposure_pct: 0.40
+  target_single_asset_exposure_pct: [0.35, 0.38]
+  max_orders_per_day: 200
+  max_open_positions: 100
+  max_options_contracts: 1000
+
+margin:
+  long_initial: 0.50
+  long_maintenance: 0.40
+  short_initial: 0.60
+  short_maintenance: 0.50
+
+financing:
+  long_annual_rate: 0.048
+  short_annual_rate: 0.060
+  applied: daily_after_market_close
+  intraday_round_trip_interest: none
+
+fees:
+  equity:
+    platform_fee_usd: 0.99
+    activity_fee_usd_per_share: 0.000166
+    activity_fee_cap_usd: 8.30
+  options:
+    min_commission_usd: 1.99
+    commission_usd_per_contract: 0.65
+    platform_fee_usd_per_contract: 0.30
+    activity_fee_usd_per_contract: 0.00279
+    regulatory_fee_usd_per_contract: 0.015
+
+sessions_sgt:
+  pre_market: ["17:00", "22:30"]
+  regular: ["22:30", "05:00+1"]
+  after_hours: ["05:00+1", "09:00+1"]
+
+calendar:
+  closed_days: ["2026-11-26"]
+  early_close_days:
+    "2026-11-27": {regular_close_et: "14:00", flatten_by_sgt: "02:00"}
+  daily_flatten_by_sgt: "04:45"
+
+risk:
+  risk_per_trade_pct: 0.0075
+  max_portfolio_heat_pct: 0.06
+  max_concurrent_positions: 3
+  max_new_positions_per_ticker_per_session: 1
+  max_trades_per_day: 6
+  daily_drawdown_halt_pct: 0.03
+  rolling_review_trades: 20
+  min_expectancy_r: 0.0
+
+execution:
+  extended_hours_order_type: limit
+  regular_hours_order_type: limit
+  verify_fill_after_submit: true
+  max_reprice_steps: 3
+  reprice_step_usd: 0.02

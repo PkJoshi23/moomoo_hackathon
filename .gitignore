@@ -1,0 +1,16 @@
+# secrets and credentials
+.env
+.env.*
+*.token
+*.pem
+*pat*.txt
+secrets/
+
+# tooling
+node_modules/
+__pycache__/
+.venv/
+.qoder/
+.DS_Store
+Thumbs.db
+*.log.tmp
