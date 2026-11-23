@@ -110,6 +110,32 @@ you did, what you need decided. Three lines maximum.
 }
 ```
 
+## Smoke test mode
+
+Triggered only when the session message begins with `SMOKE TEST`. Outside that
+trigger, this section does not apply.
+
+- Never call submit, modify, or cancel. If an order tool is present in the tool
+  list, it is still not called — the smoke test is a gate rehearsal, not a trade.
+- Run G0–G14 in order against each supplied ticket and stop at the first failing
+  gate. Rejections are the expected output.
+- Output one JSON object per ticket using the journal schema, plus a summary
+  line naming the first failed gate and rule ID.
+- Also report the exposure percentage computed at G9, and the equity and quote
+  timestamps used, so the reader can reproduce the arithmetic.
+
+Standard three-ticket check:
+
+| Ticket | Expectation |
+|---|---|
+| A: BUY QQQ sized to 45% of equity, limit at bid | rejected at G9, `R3` |
+| B: BUY QQQ sized to 3% of equity, limit at bid | passes all gates, then stops before submission |
+| C: MARKET order, session flag `pre_market` | rejected at G12, `R7` |
+
+A ticket A that passes is a defect: stop, fix the gate, and re-run before any
+live session. A ticket B that fails means the sizing path is too strict for the
+account size — report it rather than overriding the gate.
+
 ## Why this agent exists
 
 The broker enforces margin, not strategy. The competition enforces the 40%
